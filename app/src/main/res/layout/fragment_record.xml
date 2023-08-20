@@ -8,10 +8,65 @@
     tools:context=".RecordFragment">
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/timeTextView"
+        style="@style/hintTextStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Record Fragment"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@id/audioButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="4:20" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/recordProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:indicatorSize="102dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:trackColor="@color/progressDefault"
+        app:trackThickness="4dp" />
+
+    <ImageButton
+        android:id="@+id/audioButton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="@drawable/btn_bg_green"
+        tools:src="@drawable/ic_play" />
+
+    <TextView
+        android:id="@+id/hintTextView"
+        style="@style/hintTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/audioButton"
+        tools:text="@string/hintPlay" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_marginBottom="80dp"
+        android:backgroundTint="@color/bg_selector"
+        android:paddingHorizontal="40dp"
+        android:text="@string/cancel"
+        android:textColor="@color/text_selector"
+        android:textSize="17sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="@color/bgGreen"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

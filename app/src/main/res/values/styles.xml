@@ -1,0 +1,7 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="hintTextStyle">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/textHint</item>
+    </style>
+
+</resources>

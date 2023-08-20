@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity() {
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = when (position) {
-                1 -> getString(R.string.tab_more)
-                else -> getString(R.string.tab_messages)
+                1 -> getString(R.string.tabMore)
+                else -> getString(R.string.tabMessages)
             }
         }.attach()
     }

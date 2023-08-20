@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Audio Recorder</string>
-    <string name="tab_messages">Messages</string>
-    <string name="tab_more">More</string>
+    <string name="tabMessages">Messages</string>
+    <string name="tabMore">More</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="hintStartRecord">Tap to record</string>
+    <string name="hintStopRecord">Tap to stop recording</string>
+    <string name="hintPlay">Tap to play your message</string>
 </resources>
