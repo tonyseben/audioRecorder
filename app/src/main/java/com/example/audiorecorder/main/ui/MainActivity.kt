@@ -1,7 +1,8 @@
-package com.example.audiorecorder
+package com.example.audiorecorder.main.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.audiorecorder.R
 import com.example.audiorecorder.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
