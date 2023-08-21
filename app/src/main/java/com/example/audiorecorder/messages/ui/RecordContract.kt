@@ -1,9 +1,9 @@
-package com.example.audiorecorder.record.ui
+package com.example.audiorecorder.messages.ui
 
 import com.example.audiorecorder.base.UiEvent
 import com.example.audiorecorder.base.UiSideEffect
 import com.example.audiorecorder.base.UiState
-import com.example.audiorecorder.record.domain.AudioState
+import com.example.audiorecorder.messages.domain.AudioState
 
 class RecordContract {
 

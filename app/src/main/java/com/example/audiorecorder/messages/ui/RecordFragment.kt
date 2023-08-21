@@ -1,7 +1,6 @@
-package com.example.audiorecorder.record.ui
+package com.example.audiorecorder.messages.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.audiorecorder.R
 import com.example.audiorecorder.databinding.FragmentRecordBinding
-import com.example.audiorecorder.record.domain.AudioState
+import com.example.audiorecorder.messages.domain.AudioState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

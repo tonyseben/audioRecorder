@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:background="@drawable/bg_greenish"
-    tools:context=".record.ui.RecordFragment">
+    tools:context=".messages.ui.RecordFragment">
 
     <TextView
         android:id="@+id/timeTextView"

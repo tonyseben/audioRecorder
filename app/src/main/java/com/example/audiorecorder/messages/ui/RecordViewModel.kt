@@ -1,8 +1,8 @@
-package com.example.audiorecorder.record.ui
+package com.example.audiorecorder.messages.ui
 
 import com.example.audiorecorder.base.BaseViewModel
-import com.example.audiorecorder.record.domain.AudioState
-import com.example.audiorecorder.record.domain.GetNextAudioStateUseCase
+import com.example.audiorecorder.messages.domain.AudioState
+import com.example.audiorecorder.messages.domain.GetNextAudioStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -23,8 +23,8 @@ class RecordViewModel @Inject constructor(
     }
 
     private fun handleAudioAction(){
-        val state = getNextAudioStateUse(state.value.audioState)
-        setState { copy(audioState = state) }
+        val nextState = getNextAudioStateUse(state.value.audioState)
+        setState { copy(audioState = nextState) }
     }
 
     private fun resetAudioAction(){

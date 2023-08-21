@@ -1,7 +1,7 @@
 package com.example.audiorecorder.di
 
-import com.example.audiorecorder.record.domain.GetNextAudioStateUseCase
-import com.example.audiorecorder.record.domain.GetNextAudioStateUseCaseImpl
+import com.example.audiorecorder.messages.domain.GetNextAudioStateUseCase
+import com.example.audiorecorder.messages.domain.GetNextAudioStateUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

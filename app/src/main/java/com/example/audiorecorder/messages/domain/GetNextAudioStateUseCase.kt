@@ -1,4 +1,4 @@
-package com.example.audiorecorder.record.domain
+package com.example.audiorecorder.messages.domain
 
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.example.audiorecorder.record.ui
+package com.example.audiorecorder.more.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

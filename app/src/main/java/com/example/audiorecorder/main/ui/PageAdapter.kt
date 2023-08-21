@@ -4,8 +4,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.audiorecorder.record.ui.RecordFragment
-import com.example.audiorecorder.record.ui.HistoryFragment
+import com.example.audiorecorder.messages.ui.RecordFragment
+import com.example.audiorecorder.more.ui.HistoryFragment
 
 class PageAdapter(
     fragmentManager: FragmentManager,

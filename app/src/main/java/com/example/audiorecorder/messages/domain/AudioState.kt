@@ -1,4 +1,4 @@
-package com.example.audiorecorder.record.domain
+package com.example.audiorecorder.messages.domain
 
 sealed class AudioState{
     object Idle: AudioState()
