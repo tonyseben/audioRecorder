@@ -4,26 +4,30 @@ import android.content.Context
 import android.media.AudioRecord
 import android.util.Log
 import androidx.annotation.RequiresPermission
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
 
-interface AudioRecorder {
-    suspend fun start(context: Context, config: AudioConfig)
-    fun stop()
+enum class RecordState {
+    RECORD_STARTED,
+    RECORD_COMPLETED
 }
 
-class AudioRecorderImpl @Inject constructor() : AudioRecorder{
+interface AudioRecorder {
+    suspend fun start(context: Context, config: AudioConfig): Flow<RecordState>
+    fun stop()
+    fun reset()
+}
+
+class AudioRecorderImpl @Inject constructor() : AudioRecorder {
 
     private var isRecording = false
 
     @RequiresPermission(android.Manifest.permission.RECORD_AUDIO)
-    override suspend fun start(context: Context, config: AudioConfig) = withContext(Dispatchers.IO){
-        if(isRecording) return@withContext
-
+    override suspend fun start(context: Context, config: AudioConfig): Flow<RecordState> = flow {
         val record = AudioRecord(
             config.source,
             config.sampleRateHz,
@@ -36,15 +40,16 @@ class AudioRecorderImpl @Inject constructor() : AudioRecorder{
             throw IllegalStateException("Error initializing AudioRecord");
         }
 
-        try{
+        try {
             removeOldRecoding(context, config.fileName)
             val outputStream = context.openFileOutput(config.fileName, Context.MODE_PRIVATE)
             val buffer = ByteArray(config.recordBufferSizeBytes / 2)
 
             record.startRecording()
             isRecording = true
+            emit(RecordState.RECORD_STARTED)
 
-            while (isRecording){
+            while (isRecording) {
                 Log.d("TEST", "isRecording:$isRecording")
                 val bytes = record.read(buffer, 0, buffer.size)
                 if (bytes > 0) {
@@ -54,8 +59,9 @@ class AudioRecorderImpl @Inject constructor() : AudioRecorder{
 
             outputStream?.flush()
             outputStream?.close()
+            emit(RecordState.RECORD_COMPLETED)
 
-        } catch (e: IOException){
+        } catch (e: IOException) {
 
         } finally {
             if (record.state != AudioRecord.STATE_UNINITIALIZED) {
@@ -69,7 +75,11 @@ class AudioRecorderImpl @Inject constructor() : AudioRecorder{
         isRecording = false
     }
 
-    private fun removeOldRecoding(context: Context, fileName: String){
+    override fun reset() {
+        stop()
+    }
+
+    private fun removeOldRecoding(context: Context, fileName: String) {
         val file = File(context.filesDir.absolutePath + "/" + fileName)
         if (file.exists()) file.delete()
     }

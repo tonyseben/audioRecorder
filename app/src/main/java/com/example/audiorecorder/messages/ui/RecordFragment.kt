@@ -82,11 +82,6 @@ class RecordFragment : Fragment() {
     }
 
     private fun FragmentRecordBinding.onRecordStart() {
-
-        lifecycleScope.launch {
-            context?.let { audioRecorder.start(it, AudioConfig()) }
-        }
-
         root.setBackgroundResource(R.drawable.bg_reddish)
         timeTextView.text = "0:00"
         audioActionButton.setImageResource(R.drawable.ic_stop)
@@ -101,9 +96,6 @@ class RecordFragment : Fragment() {
     }
 
     private fun FragmentRecordBinding.onRecordComplete() {
-
-        audioRecorder.stop()
-
         root.setBackgroundResource(R.drawable.bg_greenish)
         timeTextView.text = "1:00"
         audioActionButton.setImageResource(R.drawable.ic_play)
@@ -118,16 +110,6 @@ class RecordFragment : Fragment() {
     }
 
     private fun FragmentRecordBinding.onPlaybackStart() {
-
-        lifecycleScope.launch {
-            context?.let {
-                audioPlayer.play(
-                    it,
-                    AudioConfig(channel = AudioFormat.CHANNEL_OUT_MONO)
-                )
-            }
-        }
-
         root.setBackgroundResource(R.drawable.bg_greenish)
         timeTextView.text = "0.00"
         audioActionButton.setImageResource(R.drawable.ic_pause)
@@ -142,9 +124,6 @@ class RecordFragment : Fragment() {
     }
 
     private fun FragmentRecordBinding.onPlaybackPause() {
-
-        audioPlayer.pause()
-
         root.setBackgroundResource(R.drawable.bg_greenish)
         timeTextView.text = "0.00"
         audioActionButton.setImageResource(R.drawable.ic_play)
