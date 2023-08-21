@@ -1,15 +1,17 @@
-package com.example.audiorecorder.messages.ui.recorder
+package com.example.audiorecorder.messages.ui.audio
 
 import android.content.Context
 import android.media.AudioRecord
 import androidx.annotation.RequiresPermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
+
 interface AudioRecorder {
-    suspend fun start(activity: Context?, config: AudioConfig)
+    suspend fun start(context: Context, config: AudioConfig)
     fun stop()
 }
 
@@ -18,7 +20,7 @@ class AudioRecorderImpl @Inject constructor() : AudioRecorder{
     private var isRecording = false
 
     @RequiresPermission(android.Manifest.permission.RECORD_AUDIO)
-    override suspend fun start(context: Context?, config: AudioConfig) = withContext(Dispatchers.IO){
+    override suspend fun start(context: Context, config: AudioConfig) = withContext(Dispatchers.IO){
         if(isRecording) return@withContext
 
         val record = AudioRecord(
@@ -26,7 +28,7 @@ class AudioRecorderImpl @Inject constructor() : AudioRecorder{
             config.sampleRateHz,
             config.channel,
             config.encoding,
-            config.bufferSizeBytes
+            config.recordBufferSizeBytes
         )
 
         if (record.state != AudioRecord.STATE_INITIALIZED) {
@@ -34,8 +36,9 @@ class AudioRecorderImpl @Inject constructor() : AudioRecorder{
         }
 
         try{
-            val outputStream = context?.openFileOutput(config.fileName, Context.MODE_PRIVATE)
-            val buffer = ByteArray(config.bufferSizeBytes / 2)
+            removeOldRecoding(context, config.fileName)
+            val outputStream = context.openFileOutput(config.fileName, Context.MODE_PRIVATE)
+            val buffer = ByteArray(config.recordBufferSizeBytes / 2)
 
             record.startRecording()
             isRecording = true
@@ -62,6 +65,11 @@ class AudioRecorderImpl @Inject constructor() : AudioRecorder{
 
     override fun stop() {
         isRecording = false
+    }
+
+    private fun removeOldRecoding(context: Context, fileName: String){
+        val file = File(context.filesDir.absolutePath + "/" + fileName)
+        if (file.exists()) file.delete()
     }
 
 }

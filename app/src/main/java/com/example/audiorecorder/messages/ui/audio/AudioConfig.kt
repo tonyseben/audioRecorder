@@ -1,7 +1,8 @@
-package com.example.audiorecorder.messages.ui.recorder
+package com.example.audiorecorder.messages.ui.audio
 
 import android.media.AudioFormat
 import android.media.AudioRecord
+import android.media.AudioTrack
 import android.media.MediaRecorder
 
 data class AudioConfig(
@@ -11,5 +12,6 @@ data class AudioConfig(
     val encoding: Int = AudioFormat.ENCODING_PCM_16BIT,
     val fileName: String = "audio.pcm"
 ){
-    val bufferSizeBytes = AudioRecord.getMinBufferSize(sampleRateHz, channel, encoding)
+    val recordBufferSizeBytes = AudioRecord.getMinBufferSize(sampleRateHz, channel, encoding)
+    val playbackBufferSizeBytes = AudioTrack.getMinBufferSize(sampleRateHz, channel, encoding)
 }

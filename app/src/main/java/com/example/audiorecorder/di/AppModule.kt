@@ -2,8 +2,10 @@ package com.example.audiorecorder.di
 
 import com.example.audiorecorder.messages.domain.GetNextAudioStateUseCase
 import com.example.audiorecorder.messages.domain.GetNextAudioStateUseCaseImpl
-import com.example.audiorecorder.messages.ui.recorder.AudioRecorder
-import com.example.audiorecorder.messages.ui.recorder.AudioRecorderImpl
+import com.example.audiorecorder.messages.ui.audio.AudioPlayer
+import com.example.audiorecorder.messages.ui.audio.AudioPlayerImpl
+import com.example.audiorecorder.messages.ui.audio.AudioRecorder
+import com.example.audiorecorder.messages.ui.audio.AudioRecorderImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,6 +23,10 @@ class AppModule {
         @Binds
         @Singleton
         fun bindAudioRecorder(useCase: AudioRecorderImpl): AudioRecorder
+
+        @Binds
+        @Singleton
+        fun bindAudioPlayer(useCase: AudioPlayerImpl): AudioPlayer
 
         @Binds
         @Singleton

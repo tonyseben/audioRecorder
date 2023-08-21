@@ -1,5 +1,6 @@
 package com.example.audiorecorder.messages.ui
 
+import android.media.AudioFormat
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +13,9 @@ import androidx.lifecycle.lifecycleScope
 import com.example.audiorecorder.R
 import com.example.audiorecorder.databinding.FragmentRecordBinding
 import com.example.audiorecorder.messages.domain.AudioState
-import com.example.audiorecorder.messages.ui.recorder.AudioConfig
-import com.example.audiorecorder.messages.ui.recorder.AudioRecorder
+import com.example.audiorecorder.messages.ui.audio.AudioConfig
+import com.example.audiorecorder.messages.ui.audio.AudioPlayer
+import com.example.audiorecorder.messages.ui.audio.AudioRecorder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,6 +28,9 @@ class RecordFragment : Fragment() {
 
     @Inject
     internal lateinit var audioRecorder: AudioRecorder
+
+    @Inject
+    internal lateinit var audioPlayer: AudioPlayer
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,7 +84,7 @@ class RecordFragment : Fragment() {
     private fun FragmentRecordBinding.onRecordStart() {
 
         lifecycleScope.launch {
-            audioRecorder.start(context, AudioConfig())
+            context?.let { audioRecorder.start(it, AudioConfig()) }
         }
 
         root.setBackgroundResource(R.drawable.bg_reddish)
@@ -113,6 +118,9 @@ class RecordFragment : Fragment() {
     }
 
     private fun FragmentRecordBinding.onPlaybackStart() {
+
+        context?.let { audioPlayer.play(it, AudioConfig(channel = AudioFormat.CHANNEL_OUT_MONO)) }
+
         root.setBackgroundResource(R.drawable.bg_greenish)
         timeTextView.text = "0.00"
         audioActionButton.setImageResource(R.drawable.ic_pause)
