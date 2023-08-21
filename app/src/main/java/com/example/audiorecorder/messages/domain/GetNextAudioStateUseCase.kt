@@ -9,11 +9,11 @@ interface GetNextAudioStateUseCase {
 class GetNextAudioStateUseCaseImpl @Inject constructor() : GetNextAudioStateUseCase{
     override fun invoke(currentState: AudioState): AudioState {
         return when (currentState) {
-            is AudioState.Idle -> AudioState.RecordStarted
-            is AudioState.RecordStarted -> AudioState.RecordCompleted
-            is AudioState.RecordCompleted -> AudioState.PlaybackStarted
-            is AudioState.PlaybackStarted -> AudioState.PlaybackPaused
-            is AudioState.PlaybackPaused -> AudioState.PlaybackStarted
+            is AudioState.Idle -> AudioState.RecordStart
+            is AudioState.RecordStart -> AudioState.RecordStop
+            is AudioState.RecordStop -> AudioState.PlaybackStart
+            is AudioState.PlaybackStart -> AudioState.PlaybackPause
+            is AudioState.PlaybackPause -> AudioState.PlaybackStart
         }
     }
 }

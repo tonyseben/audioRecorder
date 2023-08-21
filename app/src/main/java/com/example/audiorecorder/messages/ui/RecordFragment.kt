@@ -12,14 +12,20 @@ import androidx.lifecycle.lifecycleScope
 import com.example.audiorecorder.R
 import com.example.audiorecorder.databinding.FragmentRecordBinding
 import com.example.audiorecorder.messages.domain.AudioState
+import com.example.audiorecorder.messages.ui.recorder.AudioConfig
+import com.example.audiorecorder.messages.ui.recorder.AudioRecorder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RecordFragment : Fragment() {
 
     private lateinit var binding: FragmentRecordBinding
     private val viewModel by viewModels<RecordViewModel>()
+
+    @Inject
+    internal lateinit var audioRecorder: AudioRecorder
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,10 +42,10 @@ class RecordFragment : Fragment() {
         viewModel.state.collect { state ->
             when (state.audioState) {
                 is AudioState.Idle -> binding.onIdle()
-                is AudioState.RecordStarted -> binding.onRecordStarted()
-                is AudioState.RecordCompleted -> binding.onRecordCompleted()
-                is AudioState.PlaybackStarted -> binding.onPlaybackStarted()
-                is AudioState.PlaybackPaused -> binding.onPlaybackPaused()
+                is AudioState.RecordStart -> binding.onRecordStart()
+                is AudioState.RecordStop -> binding.onRecordComplete()
+                is AudioState.PlaybackStart -> binding.onPlaybackStart()
+                is AudioState.PlaybackPause -> binding.onPlaybackPause()
             }
         }
     }
@@ -70,7 +76,12 @@ class RecordFragment : Fragment() {
         doneButton.isVisible = false
     }
 
-    private fun FragmentRecordBinding.onRecordStarted() {
+    private fun FragmentRecordBinding.onRecordStart() {
+
+        lifecycleScope.launch {
+            audioRecorder.start(context, AudioConfig())
+        }
+
         root.setBackgroundResource(R.drawable.bg_reddish)
         timeTextView.text = "0:00"
         audioActionButton.setImageResource(R.drawable.ic_stop)
@@ -84,7 +95,10 @@ class RecordFragment : Fragment() {
         doneButton.isVisible = false
     }
 
-    private fun FragmentRecordBinding.onRecordCompleted() {
+    private fun FragmentRecordBinding.onRecordComplete() {
+
+        audioRecorder.stop()
+
         root.setBackgroundResource(R.drawable.bg_greenish)
         timeTextView.text = "1:00"
         audioActionButton.setImageResource(R.drawable.ic_play)
@@ -98,7 +112,7 @@ class RecordFragment : Fragment() {
         doneButton.isVisible = true
     }
 
-    private fun FragmentRecordBinding.onPlaybackStarted() {
+    private fun FragmentRecordBinding.onPlaybackStart() {
         root.setBackgroundResource(R.drawable.bg_greenish)
         timeTextView.text = "0.00"
         audioActionButton.setImageResource(R.drawable.ic_pause)
@@ -112,7 +126,7 @@ class RecordFragment : Fragment() {
         doneButton.isVisible = true
     }
 
-    private fun FragmentRecordBinding.onPlaybackPaused() {
+    private fun FragmentRecordBinding.onPlaybackPause() {
         root.setBackgroundResource(R.drawable.bg_greenish)
         timeTextView.text = "0.00"
         audioActionButton.setImageResource(R.drawable.ic_play)
