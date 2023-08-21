@@ -47,10 +47,10 @@ class RecordFragment : Fragment() {
         viewModel.state.collect { state ->
             when (state.audioState) {
                 is AudioState.Idle -> binding.onIdle()
-                is AudioState.RecordStart -> binding.onRecordStart()
-                is AudioState.RecordStop -> binding.onRecordComplete()
-                is AudioState.PlaybackStart -> binding.onPlaybackStart()
-                is AudioState.PlaybackPause -> binding.onPlaybackPause()
+                is AudioState.RecordStarted -> binding.onRecordStart()
+                is AudioState.RecordCompleted -> binding.onRecordComplete()
+                is AudioState.PlaybackStarted -> binding.onPlaybackStart()
+                is AudioState.PlaybackPaused -> binding.onPlaybackPause()
             }
         }
     }
