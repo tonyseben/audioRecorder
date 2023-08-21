@@ -2,6 +2,7 @@ package com.example.audiorecorder.messages.ui.audio
 
 import android.content.Context
 import android.media.AudioRecord
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -44,6 +45,7 @@ class AudioRecorderImpl @Inject constructor() : AudioRecorder{
             isRecording = true
 
             while (isRecording){
+                Log.d("TEST", "isRecording:$isRecording")
                 val bytes = record.read(buffer, 0, buffer.size)
                 if (bytes > 0) {
                     outputStream?.write(buffer, 0, bytes)

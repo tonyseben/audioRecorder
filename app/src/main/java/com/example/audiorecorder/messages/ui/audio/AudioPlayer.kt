@@ -3,6 +3,9 @@ package com.example.audiorecorder.messages.ui.audio
 import android.content.Context
 import android.media.AudioManager
 import android.media.AudioTrack
+import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.DataInputStream
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -11,12 +14,16 @@ import javax.inject.Inject
 
 
 interface AudioPlayer {
-    fun play(context: Context, config: AudioConfig)
+    suspend fun play(context: Context, config: AudioConfig)
     fun pause()
 }
 
 class AudioPlayerImpl @Inject constructor()  : AudioPlayer {
-    override fun play(context: Context, config: AudioConfig) {
+
+    private var isPlaying = false
+    private var readBytes = 0
+
+    override suspend fun play(context: Context, config: AudioConfig) = withContext(Dispatchers.IO){
 
         val track = AudioTrack(
             AudioManager.STREAM_MUSIC,
@@ -31,12 +38,20 @@ class AudioPlayerImpl @Inject constructor()  : AudioPlayer {
             val inputStream = FileInputStream(context.filesDir.absolutePath + "/" + config.fileName)
             val dataInputStream = DataInputStream(inputStream)
             val buffer = ByteArray(config.playbackBufferSizeBytes)
-            var i = 0
 
             track.play()
+            dataInputStream.skipBytes(readBytes)
+            isPlaying = true
 
-            while (dataInputStream.read(buffer, 0, config.playbackBufferSizeBytes).also { i = it } > -1) {
-                track.write(buffer, 0, i)
+            while (isPlaying) {
+                Log.d("TEST", "isPlaying:$isPlaying")
+                val bytes = dataInputStream.read(buffer, 0, config.playbackBufferSizeBytes)
+                if(bytes > -1) {
+                    track.write(buffer, 0, bytes)
+                    readBytes += bytes
+                } else {
+                    isPlaying = false
+                }
             }
             dataInputStream.close()
             inputStream.close()
@@ -52,7 +67,7 @@ class AudioPlayerImpl @Inject constructor()  : AudioPlayer {
     }
 
     override fun pause() {
-
+        isPlaying = false
     }
 
 }

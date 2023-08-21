@@ -55,7 +55,7 @@ class RecordFragment : Fragment() {
         }
     }
 
-    private fun FragmentRecordBinding.initViews(){
+    private fun FragmentRecordBinding.initViews() {
         audioActionButton.setOnClickListener {
             viewModel.setEvent(RecordContract.Event.OnAudioActionClicked)
         }
@@ -119,7 +119,14 @@ class RecordFragment : Fragment() {
 
     private fun FragmentRecordBinding.onPlaybackStart() {
 
-        context?.let { audioPlayer.play(it, AudioConfig(channel = AudioFormat.CHANNEL_OUT_MONO)) }
+        lifecycleScope.launch {
+            context?.let {
+                audioPlayer.play(
+                    it,
+                    AudioConfig(channel = AudioFormat.CHANNEL_OUT_MONO)
+                )
+            }
+        }
 
         root.setBackgroundResource(R.drawable.bg_greenish)
         timeTextView.text = "0.00"
