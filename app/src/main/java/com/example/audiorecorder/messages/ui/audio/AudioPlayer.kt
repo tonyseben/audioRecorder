@@ -12,6 +12,7 @@ import javax.inject.Inject
 
 interface AudioPlayer {
     fun play(context: Context, config: AudioConfig)
+    fun pause()
 }
 
 class AudioPlayerImpl @Inject constructor()  : AudioPlayer {
@@ -48,6 +49,9 @@ class AudioPlayerImpl @Inject constructor()  : AudioPlayer {
             track.stop()
             track.release()
         }
+    }
+
+    override fun pause() {
 
     }
 

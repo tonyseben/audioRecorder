@@ -135,6 +135,9 @@ class RecordFragment : Fragment() {
     }
 
     private fun FragmentRecordBinding.onPlaybackPause() {
+
+        audioPlayer.pause()
+
         root.setBackgroundResource(R.drawable.bg_greenish)
         timeTextView.text = "0.00"
         audioActionButton.setImageResource(R.drawable.ic_play)
