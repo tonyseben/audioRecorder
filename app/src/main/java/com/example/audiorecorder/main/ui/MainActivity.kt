@@ -2,6 +2,7 @@ package com.example.audiorecorder.main.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import com.example.audiorecorder.R
 import com.example.audiorecorder.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
@@ -28,6 +29,10 @@ class MainActivity : AppCompatActivity() {
             tab.text = when (position) {
                 1 -> getString(R.string.tabMore)
                 else -> getString(R.string.tabMessages)
+            }
+            tab.icon = when (position) {
+                1 -> AppCompatResources.getDrawable(this@MainActivity, R.drawable.ic_more)
+                else -> AppCompatResources.getDrawable(this@MainActivity, R.drawable.ic_messages)
             }
         }.attach()
     }
