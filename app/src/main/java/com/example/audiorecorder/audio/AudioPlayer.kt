@@ -1,6 +1,5 @@
 package com.example.audiorecorder.audio
 
-import android.content.Context
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.util.Log
@@ -9,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import java.io.FileInputStream
-import java.io.FileNotFoundException
 import java.io.IOException
 import javax.inject.Inject
 
@@ -20,7 +18,7 @@ enum class PlayState {
 }
 
 interface AudioPlayer {
-    suspend fun play(context: Context, config: AudioConfig): Flow<PlayState>
+    suspend fun play(inputStream: FileInputStream, config: AudioConfig): Flow<PlayState>
     fun pause()
     fun reset()
 }
@@ -30,7 +28,7 @@ class AudioPlayerImpl @Inject constructor() : AudioPlayer {
     private var isPlaying = false
     private var readBytes = 0L
 
-    override suspend fun play(context: Context, config: AudioConfig): Flow<PlayState> = flow {
+    override suspend fun play(inputStream: FileInputStream, config: AudioConfig): Flow<PlayState> = flow {
 
         val track = AudioTrack(
             AudioManager.STREAM_MUSIC,
@@ -42,7 +40,6 @@ class AudioPlayerImpl @Inject constructor() : AudioPlayer {
         )
 
         try {
-            val inputStream = FileInputStream(context.filesDir.absolutePath + "/" + config.fileName)
             val buffer = ByteArray(config.playbackBufferSizeBytes)
 
             track.play()
@@ -70,8 +67,6 @@ class AudioPlayerImpl @Inject constructor() : AudioPlayer {
             }
             emit(status)
 
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {

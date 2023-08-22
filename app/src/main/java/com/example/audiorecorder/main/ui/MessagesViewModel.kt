@@ -1,6 +1,5 @@
 package com.example.audiorecorder.main.ui
 
-import android.content.Context
 import android.media.AudioFormat
 import androidx.lifecycle.viewModelScope
 import com.example.audiorecorder.audio.AudioConfig
@@ -11,15 +10,15 @@ import com.example.audiorecorder.audio.RecordState
 import com.example.audiorecorder.base.BaseViewModel
 import com.example.audiorecorder.main.domain.AudioUiState
 import com.example.audiorecorder.main.domain.GetNextAudioUiStateUseCase
+import com.example.audiorecorder.main.domain.HandleFilesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MessagesViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val getNextAudioUiState: GetNextAudioUiStateUseCase,
+    private val handleFiles: HandleFilesUseCase,
     private val audioRecorder: AudioRecorder,
     private val audioPlayer: AudioPlayer
 ) : BaseViewModel<
@@ -39,7 +38,8 @@ class MessagesViewModel @Inject constructor(
         when (getNextAudioUiState(state.value.audioState)) {
             is AudioUiState.Idle -> {}
             is AudioUiState.RecordStarted -> {
-                audioRecorder.start(context, AudioConfig()).collect { status ->
+                val opStream = handleFiles.getFileOutputStream()
+                audioRecorder.start(opStream, AudioConfig()).collect { status ->
                     val nxtState = when (status) {
                         RecordState.RECORD_STARTED -> AudioUiState.RecordStarted
                         RecordState.RECORD_COMPLETED -> AudioUiState.RecordCompleted
@@ -53,17 +53,16 @@ class MessagesViewModel @Inject constructor(
             }
 
             is AudioUiState.PlaybackStarted -> {
-                audioPlayer.play(
-                    context,
-                    AudioConfig(channel = AudioFormat.CHANNEL_OUT_MONO)
-                ).collect { status ->
-                    val nxtState = when (status) {
-                        PlayState.PLAY_STARTED -> AudioUiState.PlaybackStarted
-                        PlayState.PLAY_PAUSED -> AudioUiState.PlaybackPaused
-                        PlayState.PLAY_COMPLETED -> AudioUiState.RecordCompleted
+                val ipStream = handleFiles.getFileInputStream()
+                audioPlayer.play(ipStream, AudioConfig(channel = AudioFormat.CHANNEL_OUT_MONO))
+                    .collect { status ->
+                        val nxtState = when (status) {
+                            PlayState.PLAY_STARTED -> AudioUiState.PlaybackStarted
+                            PlayState.PLAY_PAUSED -> AudioUiState.PlaybackPaused
+                            PlayState.PLAY_COMPLETED -> AudioUiState.RecordCompleted
+                        }
+                        setState { copy(audioState = nxtState) }
                     }
-                    setState { copy(audioState = nxtState) }
-                }
             }
 
             is AudioUiState.PlaybackPaused -> {
