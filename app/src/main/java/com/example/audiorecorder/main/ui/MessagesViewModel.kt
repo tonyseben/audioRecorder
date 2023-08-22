@@ -29,8 +29,9 @@ class MessagesViewModel @Inject constructor(
     override fun handleEvents(event: MessagesContract.Event) {
         when (event) {
             is MessagesContract.Event.OnAudioActionClicked -> handleAudioStates()
-            is MessagesContract.Event.OnCancelClicked -> resetAudioAction()
-            is MessagesContract.Event.OnDoneClicked -> resetAudioAction()
+            is MessagesContract.Event.OnCancelClicked,
+            is MessagesContract.Event.OnDoneClicked,
+            is MessagesContract.Event.OnExit -> resetAudioAction()
         }
     }
 

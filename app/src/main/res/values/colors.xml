@@ -10,6 +10,9 @@
     <color name="bgGreen">#C3E6E2</color>
     <color name="bgRed">#F5D3D0</color>
 
+    <color name="visualizerGreen">#62B2AA</color>
+    <color name="visualizerRed">#EA8279</color>
+
     <color name="progressDefault">#EAEDED</color>
     <color name="textHint">#083028</color>
 </resources>

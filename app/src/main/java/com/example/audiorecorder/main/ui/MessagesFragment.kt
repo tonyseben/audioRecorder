@@ -44,6 +44,16 @@ class MessagesFragment : Fragment() {
         return binding.root
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.setEvent(MessagesContract.Event.OnExit)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.setEvent(MessagesContract.Event.OnExit)
+    }
+
     private fun observeState() = lifecycleScope.launch {
         viewModel.state.collect { state ->
             when (state.audioState) {
@@ -80,6 +90,7 @@ class MessagesFragment : Fragment() {
 
     private fun FragmentMessagesBinding.onIdle() {
         root.setBackgroundResource(R.drawable.bg_greenish)
+        visualizer.setColor(ContextCompat.getColor(requireContext(), R.color.visualizerRed))
         timeTextView.text = ""
         audioActionButton.setImageResource(R.drawable.ic_mic)
         audioActionButton.setBackgroundResource(R.drawable.btn_bg_red)
@@ -92,20 +103,18 @@ class MessagesFragment : Fragment() {
 
     private fun FragmentMessagesBinding.onRecordStart() {
         root.setBackgroundResource(R.drawable.bg_reddish)
-        timeTextView.text = "0:00"
-        visualizer.setColor(ContextCompat.getColor(requireContext(), R.color.bgRed))
+        visualizer.setColor(ContextCompat.getColor(requireContext(), R.color.visualizerRed))
         audioActionButton.setImageResource(R.drawable.ic_stop)
         audioActionButton.setBackgroundResource(R.drawable.btn_bg_red)
         recordProgress.setProgress(0, false)
         recordProgress.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.appRed))
         hintTextView.setText(R.string.hintStopRecord)
-        cancelButton.isVisible = true
+        cancelButton.isVisible = false
         doneButton.isVisible = false
     }
 
     private fun FragmentMessagesBinding.onRecordComplete() {
         root.setBackgroundResource(R.drawable.bg_greenish)
-        timeTextView.text = "1:00"
         audioActionButton.setImageResource(R.drawable.ic_play)
         audioActionButton.setBackgroundResource(R.drawable.btn_bg_green)
         recordProgress.setProgress(0, false)
@@ -117,27 +126,25 @@ class MessagesFragment : Fragment() {
 
     private fun FragmentMessagesBinding.onPlaybackStart() {
         root.setBackgroundResource(R.drawable.bg_greenish)
-        timeTextView.text = "0.00"
-        visualizer.setColor(ContextCompat.getColor(requireContext(), R.color.bgGreen))
+        visualizer.setColor(ContextCompat.getColor(requireContext(), R.color.visualizerGreen))
         audioActionButton.setImageResource(R.drawable.ic_pause)
         audioActionButton.setBackgroundResource(R.drawable.btn_bg_green)
         recordProgress.setProgress(0, false)
         recordProgress.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.appGreen))
         hintTextView.text = ""
         cancelButton.isVisible = false
-        doneButton.isVisible = true
+        doneButton.isVisible = false
     }
 
     private fun FragmentMessagesBinding.onPlaybackPause() {
         root.setBackgroundResource(R.drawable.bg_greenish)
-        timeTextView.text = "0.00"
         audioActionButton.setImageResource(R.drawable.ic_play)
         audioActionButton.setBackgroundResource(R.drawable.btn_bg_green)
         recordProgress.setProgress(0, false)
         recordProgress.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.appGreen))
         hintTextView.setText(R.string.hintPlay)
         cancelButton.isVisible = false
-        doneButton.isVisible = true
+        doneButton.isVisible = false
     }
 
     private fun hasAudioRecordPermission(): Boolean = EasyPermissions.hasPermissions(

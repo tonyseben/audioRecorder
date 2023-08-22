@@ -11,6 +11,7 @@ class MessagesContract {
         object OnAudioActionClicked: Event()
         object OnCancelClicked: Event()
         object OnDoneClicked: Event()
+        object OnExit: Event()
     }
 
     data class State(
