@@ -11,6 +11,7 @@ import javax.inject.Inject
 interface HandleFilesUseCase {
     fun getFileOutputStream(): FileOutputStream
     fun getFileInputStream(): FileInputStream
+    fun getByteCount(): Long
 }
 
 class HandleFilesUseCaseImpl @Inject constructor(
@@ -25,8 +26,16 @@ class HandleFilesUseCaseImpl @Inject constructor(
     override fun getFileInputStream(): FileInputStream =
         FileInputStream(context.filesDir.absolutePath + "/" + fileName)
 
+    override fun getByteCount(): Long {
+        File(context.filesDir.absolutePath + "/" + fileName).apply {
+            if(exists()) return length()
+        }
+        return 0L
+    }
+
     private fun removeOldFile() {
-        val file = File(context.filesDir.absolutePath + "/" + fileName)
-        if (file.exists()) file.delete()
+        File(context.filesDir.absolutePath + "/" + fileName).apply {
+            if(exists()) delete()
+        }
     }
 }

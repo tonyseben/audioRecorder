@@ -1,6 +1,7 @@
 package com.example.audiorecorder.main.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,6 +51,9 @@ class MessagesFragment : Fragment() {
                 is AudioUiState.PlaybackStarted -> binding.onPlaybackStart()
                 is AudioUiState.PlaybackPaused -> binding.onPlaybackPause()
             }
+
+            Log.d("TEST", "Progress: ${state.playbackProgress}")
+            binding.recordProgress.progress = state.playbackProgress
         }
     }
 

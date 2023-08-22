@@ -14,7 +14,8 @@ class MessagesContract {
     }
 
     data class State(
-        val audioState: AudioUiState = AudioUiState.Idle
+        val audioState: AudioUiState = AudioUiState.Idle,
+        val playbackProgress: Int = 0
     ): UiState
 
     sealed class SideEffect: UiSideEffect

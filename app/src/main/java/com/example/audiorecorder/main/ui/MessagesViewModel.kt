@@ -40,11 +40,10 @@ class MessagesViewModel @Inject constructor(
             is AudioUiState.RecordStarted -> {
                 val opStream = handleFiles.getFileOutputStream()
                 audioRecorder.start(opStream, AudioConfig()).collect { status ->
-                    val nxtState = when (status) {
-                        RecordState.RECORD_STARTED -> AudioUiState.RecordStarted
-                        RecordState.RECORD_COMPLETED -> AudioUiState.RecordCompleted
+                    when (status) {
+                        RecordState.RECORD_STARTED -> setState { copy(audioState = AudioUiState.RecordStarted) }
+                        RecordState.RECORD_COMPLETED -> setState { copy(audioState = AudioUiState.RecordCompleted) }
                     }
-                    setState { copy(audioState = nxtState) }
                 }
             }
 
@@ -54,14 +53,19 @@ class MessagesViewModel @Inject constructor(
 
             is AudioUiState.PlaybackStarted -> {
                 val ipStream = handleFiles.getFileInputStream()
+                val byteCount = handleFiles.getByteCount()
+
                 audioPlayer.play(ipStream, AudioConfig(channel = AudioFormat.CHANNEL_OUT_MONO))
                     .collect { status ->
-                        val nxtState = when (status) {
-                            PlayState.PLAY_STARTED -> AudioUiState.PlaybackStarted
-                            PlayState.PLAY_PAUSED -> AudioUiState.PlaybackPaused
-                            PlayState.PLAY_COMPLETED -> AudioUiState.RecordCompleted
+                        when (status) {
+                            is PlayState.Playing -> setState { copy(audioState = AudioUiState.PlaybackStarted, playbackProgress = 0) }
+                            is PlayState.Paused -> setState { copy(audioState = AudioUiState.PlaybackPaused) }
+                            is PlayState.Completed -> setState { copy(audioState = AudioUiState.RecordCompleted, playbackProgress = 0) }
+                            is PlayState.PlayProgress -> {
+                                val percentProgress = (status.headPosition.toDouble() / byteCount * 100).toInt()
+                                setState { copy(playbackProgress = percentProgress) }
+                            }
                         }
-                        setState { copy(audioState = nxtState) }
                     }
             }
 
