@@ -8,4 +8,6 @@
     <string name="hintStartRecord">Tap to record</string>
     <string name="hintStopRecord">Tap to stop recording</string>
     <string name="hintPlay">Tap to play your message</string>
+
+    <string name="audioRecordPermissionRationale">This app needs the Record Audio permission to record your voice</string>
 </resources>

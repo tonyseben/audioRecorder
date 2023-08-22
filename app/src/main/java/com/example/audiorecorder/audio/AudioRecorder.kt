@@ -1,5 +1,6 @@
 package com.example.audiorecorder.audio
 
+import android.Manifest
 import android.media.AudioRecord
 import android.util.Log
 import androidx.annotation.RequiresPermission
@@ -27,8 +28,11 @@ class AudioRecorderImpl @Inject constructor() : AudioRecorder {
 
     private var isRecording = false
 
-    @RequiresPermission(android.Manifest.permission.RECORD_AUDIO)
-    override suspend fun start(outputStream: FileOutputStream, config: AudioConfig): Flow<RecordState> = flow {
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
+    override suspend fun start(
+        outputStream: FileOutputStream,
+        config: AudioConfig
+    ): Flow<RecordState> = flow {
         val record = AudioRecord(
             config.source,
             config.sampleRateHz,

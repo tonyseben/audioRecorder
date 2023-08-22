@@ -1,5 +1,6 @@
 package com.example.audiorecorder.main.ui
 
+import android.Manifest
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +16,7 @@ import com.example.audiorecorder.audio.AudioPlayer
 import com.example.audiorecorder.audio.AudioRecorder
 import com.example.audiorecorder.databinding.FragmentMessagesBinding
 import com.example.audiorecorder.main.domain.AudioUiState
+import com.vmadalin.easypermissions.EasyPermissions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -59,7 +61,11 @@ class MessagesFragment : Fragment() {
 
     private fun FragmentMessagesBinding.initViews() {
         audioActionButton.setOnClickListener {
-            viewModel.setEvent(MessagesContract.Event.OnAudioActionClicked)
+            if (hasAudioRecordPermission()) {
+                viewModel.setEvent(MessagesContract.Event.OnAudioActionClicked)
+            } else {
+                requestAudioRecordPermission()
+            }
         }
         cancelButton.setOnClickListener {
             viewModel.setEvent(MessagesContract.Event.OnCancelClicked)
@@ -137,5 +143,19 @@ class MessagesFragment : Fragment() {
         hintTextView.setText(R.string.hintPlay)
         cancelButton.isVisible = false
         doneButton.isVisible = true
+    }
+
+    private fun hasAudioRecordPermission(): Boolean = EasyPermissions.hasPermissions(
+        requireContext(),
+        Manifest.permission.RECORD_AUDIO
+    )
+
+    private fun requestAudioRecordPermission(){
+        EasyPermissions.requestPermissions(
+            this@MessagesFragment,
+            getString(R.string.audioRecordPermissionRationale),
+            123,
+            Manifest.permission.RECORD_AUDIO
+        )
     }
 }
