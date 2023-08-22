@@ -13,9 +13,9 @@ import java.io.IOException
 import javax.inject.Inject
 
 
-enum class RecordState {
-    RECORD_STARTED,
-    RECORD_COMPLETED
+sealed class RecordState {
+    data class Recording(val sessionId: Int): RecordState()
+    object Completed: RecordState()
 }
 
 interface AudioRecorder {
@@ -50,10 +50,10 @@ class AudioRecorderImpl @Inject constructor() : AudioRecorder {
 
             record.startRecording()
             isRecording = true
-            emit(RecordState.RECORD_STARTED)
+            emit(RecordState.Recording(record.audioSessionId))
 
             while (isRecording) {
-                Log.d("TEST", "isRecording:$isRecording")
+                Log.d("TEST", "isRecording:${record.audioSessionId}")
                 val bytes = record.read(buffer, 0, buffer.size)
                 if (bytes > 0) {
                     outputStream.write(buffer, 0, bytes)
@@ -62,7 +62,7 @@ class AudioRecorderImpl @Inject constructor() : AudioRecorder {
 
             outputStream.flush()
             outputStream.close()
-            emit(RecordState.RECORD_COMPLETED)
+            emit(RecordState.Completed)
 
         } catch (e: IOException) {
 

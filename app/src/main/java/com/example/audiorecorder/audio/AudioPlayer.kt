@@ -2,6 +2,7 @@ package com.example.audiorecorder.audio
 
 import android.media.AudioManager
 import android.media.AudioTrack
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -11,7 +12,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 sealed class PlayState {
-    object Playing: PlayState()
+    data class Playing(val sessionId: Int): PlayState()
     data class PlayProgress(val headPosition: Long): PlayState()
     object Paused: PlayState()
     object Completed: PlayState()
@@ -45,10 +46,11 @@ class AudioPlayerImpl @Inject constructor() : AudioPlayer {
             track.play()
             inputStream.skip(readBytes)
             isPlaying = true
-            emit(PlayState.Playing)
+            emit(PlayState.Playing(track.audioSessionId))
 
             var status: PlayState? = null
             while (isPlaying) {
+                Log.d("TEST", "isPlaying:${track.audioSessionId}")
                 val bytes = inputStream.read(buffer, 0, config.playbackBufferSizeBytes)
                 if (bytes > -1) {
                     track.write(buffer, 0, bytes)

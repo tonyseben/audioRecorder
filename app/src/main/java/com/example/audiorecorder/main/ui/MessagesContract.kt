@@ -15,6 +15,7 @@ class MessagesContract {
 
     data class State(
         val audioState: AudioUiState = AudioUiState.Idle,
+        val audioSessionId: Int = 0,
         val playbackProgress: Int = 0
     ): UiState
 

@@ -54,8 +54,11 @@ class MessagesFragment : Fragment() {
                 is AudioUiState.PlaybackPaused -> binding.onPlaybackPause()
             }
 
-            Log.d("TEST", "Progress: ${state.playbackProgress}")
+            Log.d("TEST", "audioSessionId: ${state.audioSessionId}, Progress: ${state.playbackProgress}")
             binding.recordProgress.progress = state.playbackProgress
+            if (state.audioSessionId > 0) {
+                binding.visualizer.setPlayer(state.audioSessionId)
+            }
         }
     }
 
@@ -81,9 +84,7 @@ class MessagesFragment : Fragment() {
         audioActionButton.setImageResource(R.drawable.ic_mic)
         audioActionButton.setBackgroundResource(R.drawable.btn_bg_red)
         recordProgress.setProgress(0, false)
-        context?.let {
-            recordProgress.setIndicatorColor(ContextCompat.getColor(it, R.color.appRed))
-        }
+        recordProgress.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.appRed))
         hintTextView.setText(R.string.hintStartRecord)
         cancelButton.isVisible = false
         doneButton.isVisible = false
@@ -92,12 +93,11 @@ class MessagesFragment : Fragment() {
     private fun FragmentMessagesBinding.onRecordStart() {
         root.setBackgroundResource(R.drawable.bg_reddish)
         timeTextView.text = "0:00"
+        visualizer.setColor(ContextCompat.getColor(requireContext(), R.color.bgRed))
         audioActionButton.setImageResource(R.drawable.ic_stop)
         audioActionButton.setBackgroundResource(R.drawable.btn_bg_red)
         recordProgress.setProgress(0, false)
-        context?.let {
-            recordProgress.setIndicatorColor(ContextCompat.getColor(it, R.color.appRed))
-        }
+        recordProgress.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.appRed))
         hintTextView.setText(R.string.hintStopRecord)
         cancelButton.isVisible = true
         doneButton.isVisible = false
@@ -109,9 +109,7 @@ class MessagesFragment : Fragment() {
         audioActionButton.setImageResource(R.drawable.ic_play)
         audioActionButton.setBackgroundResource(R.drawable.btn_bg_green)
         recordProgress.setProgress(0, false)
-        context?.let {
-            recordProgress.setIndicatorColor(ContextCompat.getColor(it, R.color.appGreen))
-        }
+        recordProgress.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.appGreen))
         hintTextView.setText(R.string.hintPlay)
         cancelButton.isVisible = false
         doneButton.isVisible = true
@@ -120,12 +118,11 @@ class MessagesFragment : Fragment() {
     private fun FragmentMessagesBinding.onPlaybackStart() {
         root.setBackgroundResource(R.drawable.bg_greenish)
         timeTextView.text = "0.00"
+        visualizer.setColor(ContextCompat.getColor(requireContext(), R.color.bgGreen))
         audioActionButton.setImageResource(R.drawable.ic_pause)
         audioActionButton.setBackgroundResource(R.drawable.btn_bg_green)
         recordProgress.setProgress(0, false)
-        context?.let {
-            recordProgress.setIndicatorColor(ContextCompat.getColor(it, R.color.appGreen))
-        }
+        recordProgress.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.appGreen))
         hintTextView.text = ""
         cancelButton.isVisible = false
         doneButton.isVisible = true
@@ -137,9 +134,7 @@ class MessagesFragment : Fragment() {
         audioActionButton.setImageResource(R.drawable.ic_play)
         audioActionButton.setBackgroundResource(R.drawable.btn_bg_green)
         recordProgress.setProgress(0, false)
-        context?.let {
-            recordProgress.setIndicatorColor(ContextCompat.getColor(it, R.color.appGreen))
-        }
+        recordProgress.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.appGreen))
         hintTextView.setText(R.string.hintPlay)
         cancelButton.isVisible = false
         doneButton.isVisible = true
@@ -150,7 +145,7 @@ class MessagesFragment : Fragment() {
         Manifest.permission.RECORD_AUDIO
     )
 
-    private fun requestAudioRecordPermission(){
+    private fun requestAudioRecordPermission() {
         EasyPermissions.requestPermissions(
             this@MessagesFragment,
             getString(R.string.audioRecordPermissionRationale),
