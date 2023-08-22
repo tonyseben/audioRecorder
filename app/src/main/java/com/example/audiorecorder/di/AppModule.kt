@@ -1,11 +1,11 @@
 package com.example.audiorecorder.di
 
-import com.example.audiorecorder.messages.domain.GetNextAudioStateUseCase
-import com.example.audiorecorder.messages.domain.GetNextAudioStateUseCaseImpl
-import com.example.audiorecorder.messages.ui.audio.AudioPlayer
-import com.example.audiorecorder.messages.ui.audio.AudioPlayerImpl
-import com.example.audiorecorder.messages.ui.audio.AudioRecorder
-import com.example.audiorecorder.messages.ui.audio.AudioRecorderImpl
+import com.example.audiorecorder.main.domain.GetNextAudioUiStateUseCase
+import com.example.audiorecorder.main.domain.GetNextAudioUiStateUseCaseImpl
+import com.example.audiorecorder.audio.AudioPlayer
+import com.example.audiorecorder.audio.AudioPlayerImpl
+import com.example.audiorecorder.audio.AudioRecorder
+import com.example.audiorecorder.audio.AudioRecorderImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -30,7 +30,7 @@ class AppModule {
 
         @Binds
         @Singleton
-        fun bindGetNextAudioStateUseCase(useCase: GetNextAudioStateUseCaseImpl): GetNextAudioStateUseCase
+        fun bindGetNextAudioUiStateUseCase(useCase: GetNextAudioUiStateUseCaseImpl): GetNextAudioUiStateUseCase
     }
 
 }

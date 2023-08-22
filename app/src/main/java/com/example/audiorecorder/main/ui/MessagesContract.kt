@@ -1,11 +1,11 @@
-package com.example.audiorecorder.messages.ui
+package com.example.audiorecorder.main.ui
 
 import com.example.audiorecorder.base.UiEvent
 import com.example.audiorecorder.base.UiSideEffect
 import com.example.audiorecorder.base.UiState
-import com.example.audiorecorder.messages.domain.AudioState
+import com.example.audiorecorder.main.domain.AudioUiState
 
-class RecordContract {
+class MessagesContract {
 
     sealed class Event: UiEvent{
         object OnAudioActionClicked: Event()
@@ -14,7 +14,7 @@ class RecordContract {
     }
 
     data class State(
-        val audioState: AudioState = AudioState.Idle
+        val audioState: AudioUiState = AudioUiState.Idle
     ): UiState
 
     sealed class SideEffect: UiSideEffect

@@ -1,4 +1,4 @@
-package com.example.audiorecorder.messages.ui.audio
+package com.example.audiorecorder.audio
 
 import android.content.Context
 import android.media.AudioManager
