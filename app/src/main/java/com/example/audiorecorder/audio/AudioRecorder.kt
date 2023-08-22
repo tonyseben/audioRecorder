@@ -4,8 +4,10 @@ import android.content.Context
 import android.media.AudioRecord
 import android.util.Log
 import androidx.annotation.RequiresPermission
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import java.io.File
 import java.io.IOException
 import javax.inject.Inject
@@ -69,7 +71,7 @@ class AudioRecorderImpl @Inject constructor() : AudioRecorder {
                 record.release()
             }
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override fun stop() {
         isRecording = false

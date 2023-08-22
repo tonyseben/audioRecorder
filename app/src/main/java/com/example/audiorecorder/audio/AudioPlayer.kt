@@ -4,9 +4,10 @@ import android.content.Context
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.io.DataInputStream
+import kotlinx.coroutines.flow.flowOn
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -27,7 +28,7 @@ interface AudioPlayer {
 class AudioPlayerImpl @Inject constructor() : AudioPlayer {
 
     private var isPlaying = false
-    private var readBytes = 0
+    private var readBytes = 0L
 
     override suspend fun play(context: Context, config: AudioConfig): Flow<PlayState> = flow {
 
@@ -41,20 +42,18 @@ class AudioPlayerImpl @Inject constructor() : AudioPlayer {
         )
 
         try {
-            val inputStream =
-                FileInputStream(context.filesDir.absolutePath + "/" + config.fileName)
-            val dataInputStream = DataInputStream(inputStream)
+            val inputStream = FileInputStream(context.filesDir.absolutePath + "/" + config.fileName)
             val buffer = ByteArray(config.playbackBufferSizeBytes)
 
             track.play()
-            dataInputStream.skipBytes(readBytes)
+            inputStream.skip(readBytes)
             isPlaying = true
             emit(PlayState.PLAY_STARTED)
 
             var status: PlayState? = null
             while (isPlaying) {
                 Log.d("TEST", "isPlaying:$isPlaying")
-                val bytes = dataInputStream.read(buffer, 0, config.playbackBufferSizeBytes)
+                val bytes = inputStream.read(buffer, 0, config.playbackBufferSizeBytes)
                 if (bytes > -1) {
                     track.write(buffer, 0, bytes)
                     readBytes += bytes
@@ -64,7 +63,6 @@ class AudioPlayerImpl @Inject constructor() : AudioPlayer {
                     status = PlayState.PLAY_COMPLETED
                 }
             }
-            dataInputStream.close()
             inputStream.close()
 
             if (status == null) {
@@ -80,7 +78,7 @@ class AudioPlayerImpl @Inject constructor() : AudioPlayer {
             track.stop()
             track.release()
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     override fun pause() {
         isPlaying = false

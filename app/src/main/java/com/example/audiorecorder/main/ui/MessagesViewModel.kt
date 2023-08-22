@@ -3,17 +3,16 @@ package com.example.audiorecorder.main.ui
 import android.content.Context
 import android.media.AudioFormat
 import androidx.lifecycle.viewModelScope
-import com.example.audiorecorder.base.BaseViewModel
-import com.example.audiorecorder.main.domain.AudioUiState
-import com.example.audiorecorder.main.domain.GetNextAudioUiStateUseCase
 import com.example.audiorecorder.audio.AudioConfig
 import com.example.audiorecorder.audio.AudioPlayer
 import com.example.audiorecorder.audio.AudioRecorder
 import com.example.audiorecorder.audio.PlayState
 import com.example.audiorecorder.audio.RecordState
+import com.example.audiorecorder.base.BaseViewModel
+import com.example.audiorecorder.main.domain.AudioUiState
+import com.example.audiorecorder.main.domain.GetNextAudioUiStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,7 +35,7 @@ class MessagesViewModel @Inject constructor(
         }
     }
 
-    private fun handleAudioStates() = viewModelScope.launch(Dispatchers.IO) {
+    private fun handleAudioStates() = viewModelScope.launch {
         when (getNextAudioUiState(state.value.audioState)) {
             is AudioUiState.Idle -> {}
             is AudioUiState.RecordStarted -> {
